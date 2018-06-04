@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='utf-8'>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/leaflet-hash/0.2.1/leaflet-hash.js'></script>
+<style>
+  body {padding: 0; margin: 0}
+  html, body, #map {height: 100%; width: 100%;}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+var map = L.map('map')
+var tiles = new L.GridLayer()
+tiles.createTile = function(coords) {
+  var tile = L.DomUtil.create('canvas', 'leaflet-tile')
+  var ctx = tile.getContext('2d')
+  var size = this.getTileSize()
+  tile.width = size.x
+  tile.height = size.y
+  ctx.fillStyle = 'red'
+  ctx.strokeStyle = 'red'
+  ctx.font = '30px Arial'
+  ctx.textAlign = 'center'
+  ctx.fillText(coords.z + '/' + coords.x + '/' + coords.y, tile.width / 2, tile.height / 2)
+  ctx.rect(0, 0, tile.width, tile.height)
+  ctx.stroke()
+  return tile
+}
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' 
+}).addTo(map)
+tiles.addTo(map)
+var hash = new L.Hash(map)
+map.setView([8, 25], 5)
+</script>
+</body>
+</html>
+
